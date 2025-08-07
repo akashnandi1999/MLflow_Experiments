@@ -9,3 +9,4 @@ with mlflow.start_run():
   mlflow.log_metric('metric name', 1)
 
 Token = c5766a12ee0830fec6c681e73817bcc3caa53355
+Dagshub_URL = https://dagshub.com/akashnandi1999/MLflow_Experiments.mlflow

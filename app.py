@@ -15,6 +15,8 @@ from urllib.parse import urlparse
 import mlflow
 from mlflow.models import infer_signature
 import mlflow.sklearn
+import dagshub
+dagshub.init(repo_owner='akashnandi1999', repo_name='MLflow_Experiments', mlflow=True)
 
 import logging
 
@@ -32,6 +34,12 @@ def eval_metrics(actual, pred):
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
     np.random.seed(40)
+
+    dagshub.init(
+        repo_owner='akashnandi1999',           # Your DAGsHub username
+        repo_name='MLflow_Experiments',        # Your DAGsHub repo name
+        mlflow=True
+    )
 
     # Read the wine-quality csv file from the URL
     csv_url = (
@@ -64,10 +72,10 @@ if __name__ == "__main__":
 
         (rmse, mae, r2) = eval_metrics(test_y, predicted_qualities)
 
-        print("Elasticnet model (alpha={:f}, l1_ratio={:f}):".format(alpha, l1_ratio))
-        print("  RMSE: %s" % rmse)
-        print("  MAE: %s" % mae)
-        print("  R2: %s" % r2)
+        print(f"ElasticNet Model (alpha={alpha}, l1_ratio={l1_ratio}):")
+        print(f"  RMSE: {rmse}")
+        print(f"  MAE: {mae}")
+        print(f"  R2: {r2}")
 
         mlflow.log_param("alpha", alpha)
         mlflow.log_param("l1_ratio", l1_ratio)
@@ -79,9 +87,7 @@ if __name__ == "__main__":
         #signature = infer_signature(train_x, predictions)
 
         ## For Remote server only(DAGShub)
-
-        remote_server_uri="https://dagshub.com/krishnaik06/mlflowexperiments.mlflow"
-        mlflow.set_tracking_uri(remote_server_uri)
+        #mlflow.sklearn.log_model(lr, "model", signature=signature)
 
         tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
 
